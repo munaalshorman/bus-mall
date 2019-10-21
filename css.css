@@ -19,7 +19,9 @@ img{
     border: 10px solid brown;
     border-radius: 5%;}
 header{
+        transition:0.2 ;
         text-align: center;
         font-size: 35px;
         margin-bottom: 50px;
+      
     }

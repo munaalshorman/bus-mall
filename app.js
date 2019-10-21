@@ -5,13 +5,18 @@
 // and has the following properties:Name of the product/File path of image
 
 function BusMall(title, src) {
-    this.title = title;
-    this.src = src;
-    this.clickCtr = 0;
-    this.shownCtr = 0;
-    BusMall.all.push(this);
+  this.title = title;
+  this.src = src;
+  this.clickCtr = 0;
+  this.shownCtr = 0;
+  BusMall.all.push(this);
 }
+
+BusMall.roundCtr = 0;
+BusMall.roundLimit = 25;
+
 BusMall.all = [];
+
 new BusMall('bag', 'img/bag.jpg');
 new BusMall('banana', 'img/banana.jpg');
 new BusMall('bathroom', 'img/bathroom.jpg');
@@ -37,155 +42,163 @@ BusMall.leftObject = null;
 BusMall.centerObject = null;
 BusMall.rightObject = null;
 
-BusMall.roundCtr = 0;
-BusMall.roundLimit =25;
+
 //   Create an algorithm that will randomly generate three unique product images from 
 //   the images directory and display them side-by-side-by-side in the browser window.
+function renderNewBusMall() {
 
-function getRandomBusMall() {
-    var index = Math.floor(Math.random() * BusMall.all.length);
-    return BusMall.all[index];
+  // ensure that previous goats not shown on next round
+  var forbidden = [BusMall.leftObject, BusMall.centerObject, BusMall.rightObject];
+
+  do {
+
+    BusMall.leftObject = getRandomBusMall();
+
+  } while (forbidden.includes(BusMall.leftObject,BusMall.centerObject))
+
+  // add left  to forbidden list so we don't double up
+  forbidden.push(BusMall.leftObject);
+
+  do {
+
+    BusMall.rightObject = getRandomBusMall();
+
+  } while (forbidden.includes(BusMall.rightObject));
+
+  do {
+
+    BusMall.centerObject = getRandomBusMall();
+
+  } while (forbidden.includes(BusMall.centerObject));
+
+  // WARNING: if you got really unlucky the above code would result in infinite loop
+  // Can you think of safer ways?
+
+  BusMall.leftObject.shownCtr++;
+  BusMall.rightObject.shownCtr++;
+  BusMall.centerObject.shownCtr++;
+
+  var leftImageElement = BusMall.leftImage;
+  var rightImageElement = BusMall.rightImage;
+  var centerImageElement = BusMall.centerImage;
+
+  leftImageElement.setAttribute('src', BusMall.leftObject.src);
+  leftImageElement.setAttribute('alt', BusMall.leftObject.title);
+  centerImageElement.setAttribute('src', BusMall.centerObject.src);
+  centerImageElement.setAttribute('alt', BusMall.centerObject.title);
+  rightImageElement.setAttribute('src', BusMall.rightObject.src);
+  rightImageElement.setAttribute('alt', BusMall.rightObject.title);
+ 
+  BusMall.leftTitle.textContent = BusMall.leftObject.title;
+  BusMall.centerTitle.textContent = BusMall.centerObject.title;
+  BusMall.rightTitle.textContent = BusMall.rightObject.title;
+
 }
+function getRandomBusMall() {
+  var index = Math.floor(Math.random() * BusMall.all.length);
+
+  return BusMall.all[index];
+}
+
+
+
+function randomInRange(min, max) {
+  var range = max - min + 1; // add one since we will be flooring
+  var rand = Math.floor(Math.random() * range) + min
+  return rand;
+}
+
 
 BusMall.container = document.getElementById('container');
 BusMall.leftImage = document.getElementById('left-busmall-image');
-BusMall.rightImage = document.getElementById('right-busmall-image');
 BusMall.centerImage = document.getElementById('center-busmall-image');
+BusMall.rightImage = document.getElementById('right-busmall-image');
+
 
 
 BusMall.leftTitle = document.getElementById('left-busmall-title');
+BusMall.centerTitle = document.getElementById('center-busmall-title');
 BusMall.rightTitle = document.getElementById('right-busmall-title');
-BusMall.centerTitle= document.getElementById('ceneter-busmall-title');
 
-    
-function renderNewBusMall() {
 
-    // ensure that previous goats not shown on next round
-    var forbidden = [BusMall.leftObject,BusMall.centerObject,BusMall.rightObject];
-  
-    do {
-  
-      BusMall.leftObject = getRandomBusMall();
-  
-    } while (forbidden.includes(BusMall.leftObject))
-  
-    // add left  to forbidden list so we don't double up
-    forbidden.push(BusMall.leftObject);
-  
-    do {
-  
-     BusMall.rightObject = getRandomBusMall();
-  
-    } while(forbidden.includes(BusMall.rightObject));
-
-    do {
-  
-        BusMall.centerObject = getRandomBusMall();
-     
-       } while(forbidden.includes(BusMall.centerObject));
-  
-    // WARNING: if you got really unlucky the above code would result in infinite loop
-    // Can you think of safer ways?
-    
-   BusMall.leftObject.shownCtr++;
-   BusMall.rightObject.shownCtr++;
-   BusMall.centerObject.shownCtr++;
-  
-    var leftImageElement = BusMall.leftImage;
-    var rightImageElement = BusMall.rightImage;
-    var centerImageElement=BusMall.centerImage;
-  
-    leftImageElement.setAttribute('src', BusMall.leftObject.src);
-    leftImageElement.setAttribute('alt', BusMall.leftObject.title);
-    centerImageElement.setAttribute('src', BusMall.centerObject.src);
-    centerImageElement.setAttribute('alt', BusMall.centerObject.title);
-    rightImageElement.setAttribute('src', BusMall.rightObject.src);
-    rightImageElement.setAttribute('alt', BusMall.rightObject.title);
-    
-    BusMall.leftTitle.textContent = BusMall.leftObject.title;
-    BusMall.centertTitle.textContent = BusMall.centerObject.title;
-    BusMall.rightTitle.textContent = BusMall.rightObject.title;
-
-  }
-  
-  
-  // not using this, just showing the better way vs. ceil
-  function randomInRange(min, max) {
-    var range = max - min + 1; // add one since we will be flooring
-    var rand = Math.floor(Math.random() * range) + min
-    return rand;
-  }
 
 function updateTotals() {
 
-    var tableBody = document.getElementById('report');
-  
-    // Remove all children so that content doesn't get duplicated
-    // easiest way is to set innerHTML
-    // WARNING: will not remove event listeners, so be careful with that
-    tableBody.innerHTML = '';
-  
-    for (var i = 0; i < BusMall.all.length; i++) {
-      var mall = BusMall.all[i];
-      var row = addElement('tr', tableBody);
-      addElement('td', row, mall.title);
-    //   addElement('td', row, '' + mall.clickCtr);
-      addElement('td', row, '' + mall.shownCtr);
-    }
+  var tableBody = document.getElementById('report');
+
+  tableBody.innerHTML = '';
+
+  for (var i = 0; i < BusMall.all.length; i++) {
+    var mall = BusMall.all[i];
+    var row = addElement('tr', tableBody);
+    addElement('td', row, mall.title);
+    addElement('td', row, '' + mall.clickCtr);
+    addElement('td', row, '' + mall.shownCtr);
   }
-
-  function addElement(tag, container, text) {
-    var element = document.createElement(tag);
-    container.appendChild(element);
-    if(text) {
-      element.textContent = text;
-    }
-    return element;
-  }
-  
-  
-function clickHandler(event) {
-
-    var clickedId = event.target.id;
-    var busMallClicked;
-
-    if (clickedId === 'left-busmall-image') {
-        busMallClicked = BusMall.leftObject;
-        console.log('Um, what was clicked on???', clickedId);
-    } else if (clickedId === 'right-busmall-image') {
-        busMallClicked = BusMall.rightObject;
-        console.log('Um, what was clicked on???', clickedId);
-    } else if (clickedId === 'center-busmall-image') {
-        busMallClicked = BusMall.centerObject;
-    }
-    else {
-        console.log('Um, what was clicked on???', clickedId);
-    }
-
-    if (busMallClicked) {
-        BusMall.clickCtr++;
-        BusMall.roundCtr++;
-
-        updateTotals();
-
-        if (BusMall.roundCtr === BusMall.roundLimit) {
-
-            alert('No more clicking for you!');
-
-            BusMall.container.removeEventListener('click', clickHandler);
-
-        } else {
-
-            renderNewBusMall();
-        }
-    }
 }
 
-// Notice that we're attaching event listener to the container, 
-// but event.target will allow us to which child element was actually clicked
+function addElement(tag, container, text) {
+  var element = document.createElement(tag);
+  container.appendChild(element);
+  if (text) {
+    element.textContent = text;
+  }
+  return element;
+}
+
+
+function clickHandler(event) {
+
+  var clickedId = event.target.id;
+  var busMallClicked;
+
+  if (clickedId === 'left-busmall-image') {
+    busMallClicked = BusMall.leftObject;
+    // console.log('Um, what was clicked on???', clickedId);
+  } else if (clickedId === 'right-busmall-image') {
+    busMallClicked = BusMall.rightObject;
+    // console.log('Um, what was clicked on???', clickedId);
+  } else if (clickedId === 'center-busmall-image') {
+    busMallClicked = BusMall.centerObject;
+  }
+  else {
+    console.log(' what was clicked on?', clickedId);
+  }
+  // console.log('clickctrbefor',BusMall.clickCtr);
+  if (busMallClicked) {
+    busMallClicked.clickCtr++;
+    // console.log('clickctrafter',BusMall.clickCtr);
+    busMallClicked.roundCtr++;
+
+    updateTotals();
+
+    if (BusMall.roundCtr === BusMall.roundLimit) {
+
+      alert('No more clicking ');
+
+      BusMall.container.removeEventListener('click', clickHandler);
+
+    } else {
+
+      renderNewBusMall();
+    }
+  }
+}
+
+
+
 BusMall.container.addEventListener('click', clickHandler);
 
 
 updateTotals();
 
-renderNewBusMall();
+ renderNewBusMall();
+ 
+// function result(){
+//   for (var i =0;i<BusMall.all.length;i++){
+//   console.log(BusMall.all[0]+ 'had'+   +'votes and was shown'+ busMall.all.shownCtr +'times')  
+//   }
+
+ 
+// }
+
