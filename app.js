@@ -57,7 +57,7 @@ BusMall.leftTitle = document.getElementById('left-busmall-title');
 BusMall.rightTitle = document.getElementById('right-busmall-title');
 BusMall.centerTitle= document.getElementById('ceneter-busmall-title');
 
-
+    
 function renderNewBusMall() {
 
     // ensure that previous goats not shown on next round
