@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+  }
+body{
+    text-align: center;
+}
+section div  {
+   float:left;
+   width:300px;
+}
+
+section{
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+img{
+    width: 150px;
+    border: 10px solid brown;
+    border-radius: 5%;}
+header{
+        text-align: center;
+        font-size: 35px;
+        margin-bottom: 50px;
+    }
