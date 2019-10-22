@@ -125,24 +125,16 @@ function getRandomBusMall() {
 // }
 
 
-
-
-function updateTotals() {
-
-  var tableBody = document.getElementById('report');
-
-  tableBody.innerHTML = '';
-
-  for (var i = 0; i < BusMall.all.length; i++) {
-    var mall = BusMall.all[i];
-    var row = addElement('tr', tableBody);
-    addElement('td', row, mall.title);
-    addElement('td', row, '' + mall.clickCtr);
-    addElement('td', row, '' + mall.shownCtr);
-
-  
+function renderSentences(){
+  var container=document.getElementById('report-sen');
+  for (var i =0;i<BusMall.all.length;i++){
+    addElement('p',container,sentence)
+    var product=BusMall.all[i];
+    var sentence=product.title +' had '+ product.clickCtr +' votes and was shown '+ product.shownCtr   +'times' 
   }
 }
+
+
 
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
@@ -181,13 +173,14 @@ function clickHandler(event) {
 // console.log('cli',BusMall.clickCtr);
     BusMall.roundCtr++;
 
-    updateTotals();
+    // updateTotals();
     // console.log('busMallClicked.roundCtr++',BusMall.roundCtr)
 
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
       alert ('No more clicking ');
-      typeChart();
+      renderSentences();
+
 
 
       BusMall.container.removeEventListener('click', clickHandler);
@@ -200,18 +193,4 @@ function clickHandler(event) {
 }
 
 BusMall.container.addEventListener('click', clickHandler);
-
-
-
-updateTotals();
-
- renderNewBusMall();
- 
-// function result(){
-//   for (var i =0;i<BusMall.all.length;i++){
-//   console.log(BusMall.all[0]+ 'had'+   +'votes and was shown'+ busMall.all.shownCtr +'times')  
-//   }
-
- 
-// }
-
+renderNewBusMall();
