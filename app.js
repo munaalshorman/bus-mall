@@ -268,32 +268,3 @@ renderNewBusMall();
 
 typeChart();
 
-// var ctx = document.getElementById('myChart').getContext('2d');
-
-// console.log('Chart : ', Chart);
-// var chart = new Chart(ctx, {
-//   type: 'bar',
-
-//   data: {
-//     labels: ['Bag ', 'Banana ', 'Bathroom ', 'Boots ', 'Breakfast ', 'Bubblegum ', 'Chair ', 'Cthulhu ', 'Dog-Duck ', 'Dragon ', 'Pen ', 'Pet-Sweep ', 'Scissors ', 'Shark ', 'Sweep ', 'Tauntaun ', 'Unicorn ', 'USB ', 'Water-Can ', 'Wine-Glass '],
-//     datasets: [
-//       {
-//         label: 'Bus Mall Products click',
-//         backgroundColor: '#E89D48',
-//         borderColor: '#FFC14F',
-//         data: clickArr,
-//       },
-//       {
-//         label: 'Bus Mall Products shown',
-//         backgroundColor: '#FF9A5C',
-//         borderColor: '#E86E48',
-//         data: shownArr,
-//       }
-//     ]
-
-//   },
-//   // Configuration options go here
-//   options: {}
-// });
-
-// // 
