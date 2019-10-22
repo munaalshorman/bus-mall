@@ -17,6 +17,23 @@ BusMall.roundLimit = 25;
 
 BusMall.all = [];
 
+// console.log('cliq',BusMall.all);
+BusMall.container = document.getElementById('container');
+BusMall.leftImage = document.getElementById('left-busmall-image');
+BusMall.centerImage = document.getElementById('center-busmall-image');
+BusMall.rightImage = document.getElementById('right-busmall-image');
+
+
+
+BusMall.leftTitle = document.getElementById('left-busmall-title');
+BusMall.centerTitle = document.getElementById('center-busmall-title');
+BusMall.rightTitle = document.getElementById('right-busmall-title');
+
+BusMall.leftObject = null;
+BusMall.centerObject = null;
+BusMall.rightObject = null;
+
+
 new BusMall('bag', 'img/bag.jpg');
 new BusMall('banana', 'img/banana.jpg');
 new BusMall('bathroom', 'img/bathroom.jpg');
@@ -38,9 +55,7 @@ new BusMall('usb', 'img/usb.gif');
 new BusMall('water-can', 'img/water-can.jpg');
 new BusMall('wine-glass', 'img/wine-glass.jpg');
 
-BusMall.leftObject = null;
-BusMall.centerObject = null;
-BusMall.rightObject = null;
+
 
 
 //   Create an algorithm that will randomly generate three unique product images from 
@@ -54,7 +69,7 @@ function renderNewBusMall() {
 
     BusMall.leftObject = getRandomBusMall();
 
-  } while (forbidden.includes(BusMall.leftObject,BusMall.centerObject))
+  } while (forbidden.includes(BusMall.leftObject))
 
   // add left  to forbidden list so we don't double up
   forbidden.push(BusMall.leftObject);
@@ -71,14 +86,14 @@ function renderNewBusMall() {
 
   } while (forbidden.includes(BusMall.centerObject));
 
-  // WARNING: if you got really unlucky the above code would result in infinite loop
-  // Can you think of safer ways?
+
 
   BusMall.leftObject.shownCtr++;
   BusMall.rightObject.shownCtr++;
   BusMall.centerObject.shownCtr++;
 
   var leftImageElement = BusMall.leftImage;
+  // console.log('leftImageElement',leftImageElement);
   var rightImageElement = BusMall.rightImage;
   var centerImageElement = BusMall.centerImage;
 
@@ -88,12 +103,13 @@ function renderNewBusMall() {
   centerImageElement.setAttribute('alt', BusMall.centerObject.title);
   rightImageElement.setAttribute('src', BusMall.rightObject.src);
   rightImageElement.setAttribute('alt', BusMall.rightObject.title);
- 
+
   BusMall.leftTitle.textContent = BusMall.leftObject.title;
   BusMall.centerTitle.textContent = BusMall.centerObject.title;
   BusMall.rightTitle.textContent = BusMall.rightObject.title;
 
 }
+
 function getRandomBusMall() {
   var index = Math.floor(Math.random() * BusMall.all.length);
 
@@ -102,23 +118,12 @@ function getRandomBusMall() {
 
 
 
-function randomInRange(min, max) {
-  var range = max - min + 1; // add one since we will be flooring
-  var rand = Math.floor(Math.random() * range) + min
-  return rand;
-}
+// function randomInRange(min, max) {
+//   var range = max - min + 1;
+//   var rand = Math.floor(Math.random() * range) + min
+//   return rand;
+// }
 
-
-BusMall.container = document.getElementById('container');
-BusMall.leftImage = document.getElementById('left-busmall-image');
-BusMall.centerImage = document.getElementById('center-busmall-image');
-BusMall.rightImage = document.getElementById('right-busmall-image');
-
-
-
-BusMall.leftTitle = document.getElementById('left-busmall-title');
-BusMall.centerTitle = document.getElementById('center-busmall-title');
-BusMall.rightTitle = document.getElementById('right-busmall-title');
 
 
 
@@ -134,6 +139,8 @@ function updateTotals() {
     addElement('td', row, mall.title);
     addElement('td', row, '' + mall.clickCtr);
     addElement('td', row, '' + mall.shownCtr);
+
+  
   }
 }
 
@@ -145,7 +152,7 @@ function addElement(tag, container, text) {
   }
   return element;
 }
-
+// console.log('busMallbefor.roundCtr++',BusMall.roundCtr);
 
 function clickHandler(event) {
 
@@ -154,27 +161,34 @@ function clickHandler(event) {
 
   if (clickedId === 'left-busmall-image') {
     busMallClicked = BusMall.leftObject;
-    // console.log('Um, what was clicked on???', clickedId);
+    var busMallNew=BusMall.leftObject;
+
   } else if (clickedId === 'right-busmall-image') {
     busMallClicked = BusMall.rightObject;
-    // console.log('Um, what was clicked on???', clickedId);
+    var busMallNew=BusMall.rightObject;
+
   } else if (clickedId === 'center-busmall-image') {
     busMallClicked = BusMall.centerObject;
+    var busMallNew=BusMall.centerObject;
   }
   else {
-    console.log(' what was clicked on?', clickedId);
+    alert(' what was clicked on?', clickedId);
   }
-  // console.log('clickctrbefor',BusMall.clickCtr);
+
   if (busMallClicked) {
     busMallClicked.clickCtr++;
-    // console.log('clickctrafter',BusMall.clickCtr);
-    busMallClicked.roundCtr++;
+    
+// console.log('cli',BusMall.clickCtr);
+    BusMall.roundCtr++;
 
     updateTotals();
+    // console.log('busMallClicked.roundCtr++',BusMall.roundCtr)
 
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
-      alert('No more clicking ');
+      alert ('No more clicking ');
+      typeChart();
+
 
       BusMall.container.removeEventListener('click', clickHandler);
 
@@ -185,9 +199,8 @@ function clickHandler(event) {
   }
 }
 
-
-
 BusMall.container.addEventListener('click', clickHandler);
+
 
 
 updateTotals();
