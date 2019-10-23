@@ -10,10 +10,12 @@ function BusMall(title, src) {
   this.clickCtr = 0;
   this.shownCtr = 0;
   BusMall.all.push(this);
+
+
 }
 
 BusMall.roundCtr = 0;
-BusMall.roundLimit = 25;
+BusMall.roundLimit = 25;//25
 
 BusMall.all = [];
 
@@ -54,6 +56,72 @@ new BusMall('unicorn', 'img/unicorn.jpg');
 new BusMall('usb', 'img/usb.gif');
 new BusMall('water-can', 'img/water-can.jpg');
 new BusMall('wine-glass', 'img/wine-glass.jpg');
+
+
+///////////////
+// set the global array to empty
+
+
+function updateStorage() {
+  var tempArrayClick=[];
+  // var tempArrayShown=[];
+  for (var i=0;i<BusMall.all.length;i++){
+
+    // var tempi=Busmall.all[i].title, BusMall.all[i].clickCtr;
+
+    tempArrayClick.push([BusMall.all[i].title, BusMall.all[i].clickCtr,BusMall.all[i].shownCtr]);
+   
+    var clickString = JSON.stringify(tempArrayClick);
+
+    localStorage.setItem('click', clickString);
+
+    // var temps=BusMall.all[i].shownCtr;
+
+    // tempArrayShown.push(temps);
+   
+    // var shownString = JSON.stringify(tempArrayShown);
+
+    // localStorage.setItem('shown', shownString);
+  }
+  
+}
+
+// function updateshown() {
+  
+//   for (var i=0;i<BusMall.all.length;i++){
+
+    
+//   }
+  
+// }
+
+
+//get all 
+function getFromStorage() {
+ 
+  var data = localStorage.getItem('click');
+  var clicksData = JSON.parse(data);
+
+  // var datas = localStorage.getItem('shown');
+  // var shownData=JSON.parse(datas) 
+  
+  if (clicksData) {
+    for (let i = 0; i < clicksData.length; i++) {
+      var rawObject = clicksData.all[i];
+      // console.log('rawObject',BusMall.all[i])
+      new BusMall(
+        rawObject .title,
+        rawObject .src,
+        rawObject.clickCtr,
+        rawObject.shownCtr
+      
+      );
+
+    }
+    renderSentences();
+  }
+  
+}
 
 
 
@@ -130,7 +198,7 @@ function renderSentences(){
   for (var i =0;i<BusMall.all.length;i++){
     addElement('p',container,sentence)
     var product=BusMall.all[i];
-    var sentence=product.title +' had '+ product.clickCtr +' votes and was shown '+ product.shownCtr   +'times' 
+    var sentence=product.title +' had  '+ product.clickCtr +'  votes and was shown  '+ product.shownCtr   +'  times' 
   }
 }
 
@@ -169,17 +237,20 @@ function clickHandler(event) {
 
   if (busMallClicked) {
     busMallClicked.clickCtr++;
-    
-// console.log('cli',BusMall.clickCtr);
-    BusMall.roundCtr++;
 
-    // updateTotals();
-    // console.log('busMallClicked.roundCtr++',BusMall.roundCtr)
+    BusMall.roundCtr++;
+    
+
+    
 
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
       alert ('No more clicking ');
+      updateStorage();
+      
+      // getClickShown();
       renderSentences();
+      
 
       typeChart();
 
@@ -251,7 +322,7 @@ function typeChart(){
 
 BusMall.container.addEventListener('click', clickHandler);
 
-
+getFromStorage();
 
 renderNewBusMall();
 
