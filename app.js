@@ -10,12 +10,10 @@ function BusMall(title, src) {
   this.clickCtr = 0;
   this.shownCtr = 0;
   BusMall.all.push(this);
-
-
 }
 
 BusMall.roundCtr = 0;
-BusMall.roundLimit = 25;//25
+BusMall.roundLimit = 25;
 
 BusMall.all = [];
 
@@ -58,72 +56,6 @@ new BusMall('water-can', 'img/water-can.jpg');
 new BusMall('wine-glass', 'img/wine-glass.jpg');
 
 
-///////////////
-// set the global array to empty
-
-
-function updateStorage() {
-  var tempArrayClick=[];
-  // var tempArrayShown=[];
-  for (var i=0;i<BusMall.all.length;i++){
-
-    // var tempi=Busmall.all[i].title, BusMall.all[i].clickCtr;
-
-    tempArrayClick.push([BusMall.all[i].title, BusMall.all[i].clickCtr,BusMall.all[i].shownCtr]);
-   
-    var clickString = JSON.stringify(tempArrayClick);
-
-    localStorage.setItem('click', clickString);
-
-    // var temps=BusMall.all[i].shownCtr;
-
-    // tempArrayShown.push(temps);
-   
-    // var shownString = JSON.stringify(tempArrayShown);
-
-    // localStorage.setItem('shown', shownString);
-  }
-  
-}
-
-// function updateshown() {
-  
-//   for (var i=0;i<BusMall.all.length;i++){
-
-    
-//   }
-  
-// }
-
-
-//get all 
-function getFromStorage() {
- 
-  var data = localStorage.getItem('click');
-  var clicksData = JSON.parse(data);
-
-  // var datas = localStorage.getItem('shown');
-  // var shownData=JSON.parse(datas) 
-  
-  if (clicksData) {
-    for (let i = 0; i < clicksData.length; i++) {
-      var rawObject = clicksData.all[i];
-      // console.log('rawObject',BusMall.all[i])
-      new BusMall(
-        rawObject .title,
-        rawObject .src,
-        rawObject.clickCtr,
-        rawObject.shownCtr
-      
-      );
-
-    }
-    renderSentences();
-  }
-  
-}
-
-
 
 
 //   Create an algorithm that will randomly generate three unique product images from 
@@ -131,7 +63,7 @@ function getFromStorage() {
 function renderNewBusMall() {
 
   // ensure that previous goats not shown on next round
-  var forbidden = [BusMall.leftObject, BusMall.centerObject, BusMall.rightObject];
+  var forbidden = [BusMall.leftObject, BusMall.rightObject, BusMall.centerObject];
 
   do {
 
@@ -147,6 +79,8 @@ function renderNewBusMall() {
     BusMall.rightObject = getRandomBusMall();
 
   } while (forbidden.includes(BusMall.rightObject));
+           forbidden.push(BusMall.rightObject);
+
 
   do {
 
@@ -193,12 +127,12 @@ function getRandomBusMall() {
 // }
 
 
-function renderSentences(){
-  var container=document.getElementById('report-sen');
-  for (var i =0;i<BusMall.all.length;i++){
-    addElement('p',container,sentence)
-    var product=BusMall.all[i];
-    var sentence=product.title +' had  '+ product.clickCtr +'  votes and was shown  '+ product.shownCtr   +'  times' 
+function renderSentences() {
+  var container = document.getElementById('report-sen');
+  for (var i = 0; i < BusMall.all.length; i++) {
+    addElement('p', container, sentence)
+    var product = BusMall.all[i];
+    var sentence = product.title + ' had ' + product.clickCtr + ' votes and was shown ' + product.shownCtr + 'times'
   }
 }
 
@@ -221,15 +155,15 @@ function clickHandler(event) {
 
   if (clickedId === 'left-busmall-image') {
     busMallClicked = BusMall.leftObject;
-    var busMallNew=BusMall.leftObject;
+    var busMallNew = BusMall.leftObject;
 
   } else if (clickedId === 'right-busmall-image') {
     busMallClicked = BusMall.rightObject;
-    var busMallNew=BusMall.rightObject;
+    var busMallNew = BusMall.rightObject;
 
   } else if (clickedId === 'center-busmall-image') {
     busMallClicked = BusMall.centerObject;
-    var busMallNew=BusMall.centerObject;
+    var busMallNew = BusMall.centerObject;
   }
   else {
     alert(' what was clicked on?', clickedId);
@@ -238,24 +172,24 @@ function clickHandler(event) {
   if (busMallClicked) {
     busMallClicked.clickCtr++;
 
+    // console.log('cli',BusMall.clickCtr);
     BusMall.roundCtr++;
-    
 
-    
+    // updateTotals();
+    // console.log('busMallClicked.roundCtr++',BusMall.roundCtr)
 
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
-      alert ('No more clicking ');
-      updateStorage();
-      
-      // getClickShown();
+      alert('No more clicking ');
       renderSentences();
-      
 
       typeChart();
 
 
       BusMall.container.removeEventListener('click', clickHandler);
+      // set in local Storage
+      var busmallstring = JSON.stringify(BusMall.all);
+      localStorage.setItem('products', busmallstring);
 
     } else {
 
@@ -268,12 +202,12 @@ function clickHandler(event) {
 ////////////chart/////////////
 
 var tittleArray = [];
-var clickedArray =[];
-var shownArray =[];
-function typeChart(){
+var clickedArray = [];
+var shownArray = [];
+function typeChart() {
 
-  for(var i = 0; i < BusMall.all.length; i++){
-    var titlei =BusMall.all[i].title;
+  for (var i = 0; i < BusMall.all.length; i++) {
+    var titlei = BusMall.all[i].title;
     tittleArray.push(titlei);
 
     var clickedi = BusMall.all[i].clickCtr;
@@ -283,11 +217,11 @@ function typeChart(){
     shownArray.push(showni);
 
   }
-// console.log('clickedi',clickedi);
+  // console.log('clickedi',clickedi);
 
   var ctx = document.getElementById('myChart').getContext('2d');
   var chart = new Chart(ctx, {
-  // The type of chart we want to create
+    // The type of chart we want to create
     type: 'bar',
 
     // The data for our dataset
@@ -298,7 +232,7 @@ function typeChart(){
         backgroundColor: '#FFC14F',
         borderColor: '#E89D48',
         data: clickedArray
-      },{
+      }, {
         label: 'Bus Mall Products shown',
         backgroundColor: '#E86E48',
         borderColor: '#FF9A5C',
@@ -319,9 +253,27 @@ function typeChart(){
   });
 }
 
-
 BusMall.container.addEventListener('click', clickHandler);
 
+function getFromStorage() {
+  //retrive the stored 
+  var productString = localStorage.getItem('products');
+
+  if (productString) {
+
+    var rowObjectArray = JSON.parse(productString);
+
+    for (var i = 0; i < rowObjectArray.length; i++) {
+
+      var rowObject = rowObjectArray[i];
+      var currentInstance = BusMall.all[i];
+      currentInstance.clickCtr = rowObject.clickCtr;
+      currentInstance.shownCtr = rowObject.shownCtr;
+    }
+
+  }
+
+}
 getFromStorage();
 
 renderNewBusMall();
