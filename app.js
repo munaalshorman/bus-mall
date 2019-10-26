@@ -95,7 +95,6 @@ function renderNewBusMall() {
   BusMall.centerObject.shownCtr++;
 
   var leftImageElement = BusMall.leftImage;
-  // console.log('leftImageElement',leftImageElement);
   var rightImageElement = BusMall.rightImage;
   var centerImageElement = BusMall.centerImage;
 
@@ -120,19 +119,13 @@ function getRandomBusMall() {
 
 
 
-// function randomInRange(min, max) {
-//   var range = max - min + 1;
-//   var rand = Math.floor(Math.random() * range) + min
-//   return rand;
-// }
-
-
+//to write sev
 function renderSentences() {
   var container = document.getElementById('report-sen');
   for (var i = 0; i < BusMall.all.length; i++) {
     addElement('p', container, sentence)
     var product = BusMall.all[i];
-    var sentence = product.title + ' had ' + product.clickCtr + ' votes and was shown ' + product.shownCtr + 'times'
+    var sentence = product.title + ' had ' + product.clickCtr + ' votes and was shown ' + product.shownCtr + ' times.'
   }
 }
 
@@ -146,7 +139,6 @@ function addElement(tag, container, text) {
   }
   return element;
 }
-// console.log('busMallbefor.roundCtr++',BusMall.roundCtr);
 
 function clickHandler(event) {
 
@@ -217,7 +209,7 @@ function typeChart() {
     shownArray.push(showni);
 
   }
-  // console.log('clickedi',clickedi);
+  // 
 
   var ctx = document.getElementById('myChart').getContext('2d');
   var chart = new Chart(ctx, {
