@@ -63,7 +63,7 @@ new BusMall('wine-glass', 'img/wine-glass.jpg');
 function renderNewBusMall() {
 
   // ensure that previous goats not shown on next round
-  var forbidden = [BusMall.leftObject, BusMall.centerObject, BusMall.rightObject];
+  var forbidden = [BusMall.leftObject, BusMall.rightObject, BusMall.centerObject];
 
   do {
 
@@ -79,6 +79,8 @@ function renderNewBusMall() {
     BusMall.rightObject = getRandomBusMall();
 
   } while (forbidden.includes(BusMall.rightObject));
+           forbidden.push(BusMall.rightObject);
+
 
   do {
 
@@ -93,7 +95,6 @@ function renderNewBusMall() {
   BusMall.centerObject.shownCtr++;
 
   var leftImageElement = BusMall.leftImage;
-  // console.log('leftImageElement',leftImageElement);
   var rightImageElement = BusMall.rightImage;
   var centerImageElement = BusMall.centerImage;
 
@@ -118,19 +119,13 @@ function getRandomBusMall() {
 
 
 
-// function randomInRange(min, max) {
-//   var range = max - min + 1;
-//   var rand = Math.floor(Math.random() * range) + min
-//   return rand;
-// }
-
-
-function renderSentences(){
-  var container=document.getElementById('report-sen');
-  for (var i =0;i<BusMall.all.length;i++){
-    addElement('p',container,sentence)
-    var product=BusMall.all[i];
-    var sentence=product.title +' had '+ product.clickCtr +' votes and was shown '+ product.shownCtr   +'times' 
+//to write sev
+function renderSentences() {
+  var container = document.getElementById('report-sen');
+  for (var i = 0; i < BusMall.all.length; i++) {
+    addElement('p', container, sentence)
+    var product = BusMall.all[i];
+    var sentence = product.title + ' had ' + product.clickCtr + ' votes and was shown ' + product.shownCtr + ' times.'
   }
 }
 
@@ -144,7 +139,6 @@ function addElement(tag, container, text) {
   }
   return element;
 }
-// console.log('busMallbefor.roundCtr++',BusMall.roundCtr);
 
 function clickHandler(event) {
 
@@ -153,15 +147,15 @@ function clickHandler(event) {
 
   if (clickedId === 'left-busmall-image') {
     busMallClicked = BusMall.leftObject;
-    var busMallNew=BusMall.leftObject;
+    var busMallNew = BusMall.leftObject;
 
   } else if (clickedId === 'right-busmall-image') {
     busMallClicked = BusMall.rightObject;
-    var busMallNew=BusMall.rightObject;
+    var busMallNew = BusMall.rightObject;
 
   } else if (clickedId === 'center-busmall-image') {
     busMallClicked = BusMall.centerObject;
-    var busMallNew=BusMall.centerObject;
+    var busMallNew = BusMall.centerObject;
   }
   else {
     alert(' what was clicked on?', clickedId);
@@ -169,8 +163,8 @@ function clickHandler(event) {
 
   if (busMallClicked) {
     busMallClicked.clickCtr++;
-    
-// console.log('cli',BusMall.clickCtr);
+
+    // console.log('cli',BusMall.clickCtr);
     BusMall.roundCtr++;
 
     // updateTotals();
@@ -178,13 +172,16 @@ function clickHandler(event) {
 
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
-      alert ('No more clicking ');
+      alert('No more clicking ');
       renderSentences();
 
       typeChart();
 
 
       BusMall.container.removeEventListener('click', clickHandler);
+      // set in local Storage
+      var busmallstring = JSON.stringify(BusMall.all);
+      localStorage.setItem('products', busmallstring);
 
     } else {
 
@@ -197,12 +194,12 @@ function clickHandler(event) {
 ////////////chart/////////////
 
 var tittleArray = [];
-var clickedArray =[];
-var shownArray =[];
-function typeChart(){
+var clickedArray = [];
+var shownArray = [];
+function typeChart() {
 
-  for(var i = 0; i < BusMall.all.length; i++){
-    var titlei =BusMall.all[i].title;
+  for (var i = 0; i < BusMall.all.length; i++) {
+    var titlei = BusMall.all[i].title;
     tittleArray.push(titlei);
 
     var clickedi = BusMall.all[i].clickCtr;
@@ -212,11 +209,11 @@ function typeChart(){
     shownArray.push(showni);
 
   }
-// console.log('clickedi',clickedi);
+  // 
 
   var ctx = document.getElementById('myChart').getContext('2d');
   var chart = new Chart(ctx, {
-  // The type of chart we want to create
+    // The type of chart we want to create
     type: 'bar',
 
     // The data for our dataset
@@ -227,7 +224,7 @@ function typeChart(){
         backgroundColor: '#FFC14F',
         borderColor: '#E89D48',
         data: clickedArray
-      },{
+      }, {
         label: 'Bus Mall Products shown',
         backgroundColor: '#E86E48',
         borderColor: '#FF9A5C',
@@ -248,10 +245,28 @@ function typeChart(){
   });
 }
 
-
 BusMall.container.addEventListener('click', clickHandler);
 
+function getFromStorage() {
+  //retrive the stored 
+  var productString = localStorage.getItem('products');
 
+  if (productString) {
+
+    var rowObjectArray = JSON.parse(productString);
+
+    for (var i = 0; i < rowObjectArray.length; i++) {
+
+      var rowObject = rowObjectArray[i];
+      var currentInstance = BusMall.all[i];
+      currentInstance.clickCtr = rowObject.clickCtr;
+      currentInstance.shownCtr = rowObject.shownCtr;
+    }
+
+  }
+
+}
+getFromStorage();
 
 renderNewBusMall();
 
