@@ -119,7 +119,7 @@ function getRandomBusMall() {
 
 
 
-//to write sev
+//to write sentences
 function renderSentences() {
   var container = document.getElementById('report-sen');
   for (var i = 0; i < BusMall.all.length; i++) {
@@ -130,7 +130,7 @@ function renderSentences() {
 }
 
 
-
+// to add tag to html and type text 
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
@@ -140,6 +140,7 @@ function addElement(tag, container, text) {
   return element;
 }
 
+// 
 function clickHandler(event) {
 
   var clickedId = event.target.id;
@@ -164,12 +165,9 @@ function clickHandler(event) {
   if (busMallClicked) {
     busMallClicked.clickCtr++;
 
-    // console.log('cli',BusMall.clickCtr);
     BusMall.roundCtr++;
 
-    // updateTotals();
-    // console.log('busMallClicked.roundCtr++',BusMall.roundCtr)
-
+// to stop round on limit
     if (BusMall.roundCtr === BusMall.roundLimit) {
 
       alert('No more clicking ');
@@ -179,6 +177,7 @@ function clickHandler(event) {
 
 
       BusMall.container.removeEventListener('click', clickHandler);
+      
       // set in local Storage
       var busmallstring = JSON.stringify(BusMall.all);
       localStorage.setItem('products', busmallstring);
